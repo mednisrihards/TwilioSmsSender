@@ -8,7 +8,7 @@ from datetime import datetime
 
 account_sid = os.environ["TWILIO_ACCESS_SID"]
 auth_token = os.environ["TWILIO_ACCESS_TOKEN"]
- 
+
 client = Client(account_sid, auth_token) 
 now = datetime.now()
 messageSentTime = now.strftime("%Y-%m-%d %H:%M:%S")

@@ -4,13 +4,14 @@ from mysql.connector import Error
 from twilio.rest import Client
 from datetime import datetime
 from time import time, sleep
+from isDateCheck import is_date
 
 account_sid = os.environ["TWILIO_ACCESS_SID"]
 auth_token = os.environ["TWILIO_ACCESS_TOKEN"]
 sendersPhoneNr = os.environ["TWILIO_PHONE_NR"]
- 
+
 client = Client(account_sid, auth_token) 
-minutes_to_sleep = 10
+minutes_to_sleep = 1
 
 while True:
     now = datetime.now()
@@ -36,13 +37,14 @@ while True:
             # print(row[3])   # Last name
             # print(row[4])   # Appointment date
             # print(row[1])   # Phone number
-            if row[4] > now :
-                cursor.execute(sql_message_sent_Query.format(messageSentTime, row[0]))
-                message = client.messages.create( 
-                                from_=sendersPhoneNr,  
-                                body='{}, You have an apointment on {}'.format(row[2], row[4]),      
-                                to=row[1] 
-                            )
+            if row[4] is not None :
+                if  row[4] > now:
+                    cursor.execute(sql_message_sent_Query.format(messageSentTime, row[0]))
+                    message = client.messages.create( 
+                                    from_=sendersPhoneNr,  
+                                    body='{}, You have an apointment on {}'.format(row[2], row[4]),      
+                                    to=row[1] 
+                                )
 
     except Error as e:
         print("Error reading data from MySQL table", e)
